@@ -1,0 +1,29 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.array([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50], dtype=float)                  
+T = np.array([85.0, 69.4, 57.9, 49.4, 43.1, 38.4, 34.9, 32.3, 30.4, 29.0, 28.0])      
+T_ruang = 25.0
+
+print(f"T awal      = {T[0]:.2f} °C")
+print(f"T akhir     = {T[-1]:.2f} °C")
+print(f"T minimum   = {T.min():.2f} °C")
+print(f"T maksimum  = {T.max():.2f} °C")
+print(f"T rata-rata = {T.mean():.2f} °C")
+
+dT = np.diff(T)
+k = np.argmin(dT)
+print(f"Penurunan terbesar = {abs(dT[k]):.2f} °C, "
+      f"pada interval t = {t[k]} s sampai {t[k+1]} s")
+
+# ln(T - T_ruang) terhadap t
+y = np.log(T - T_ruang)
+kemiringan, intersep = np.polyfit(t, y, 1)
+print(f"Kemiringan = {kemiringan:.4f} 1/s  (k = {-kemiringan:.4f} 1/s)")
+
+plt.plot(t, y, "o", label="data")
+plt.plot(t, kemiringan * t + intersep, "-", label=f"fit, kemiringan = {kemiringan:.4f}")
+plt.xlabel("t (s)")
+plt.ylabel("ln(T - T_ruang)")
+plt.legend()
+plt.show()
