@@ -1,0 +1,13 @@
+try:
+    mass = float(input("Mass (kg): "))
+    velocity = float(input("Velocity (m/s): "))
+except ValueError:
+    print("Invalid input.")
+    raise SystemExit(1)
+
+if mass < 0:
+    print("Invalid input.")
+    raise SystemExit(1)
+
+energy = 0.5 * mass * velocity**2
+print(f"Kinetic energy = {energy:.6f} J")
