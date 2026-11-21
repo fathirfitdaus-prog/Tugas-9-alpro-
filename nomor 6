@@ -1,0 +1,24 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+rng = np.random.default_rng(1)
+T = rng.normal(25, 4, 50)
+
+di_luar = (T < 20) | (T > 30)
+nilai_luar = T[di_luar]
+
+jumlah = np.sum(di_luar)
+persen = jumlah / len(T) * 100
+print(f"Jumlah data di luar rentang = {jumlah} dari {len(T)}")
+print(f"Persentase                  = {persen:.1f} %")
+print("Nilai di luar rentang       =", np.round(nilai_luar, 2))
+
+nomor = np.arange(len(T))
+plt.scatter(nomor[~di_luar], T[~di_luar], color="blue", label="dalam rentang")
+plt.scatter(nomor[di_luar], T[di_luar], color="red", label="di luar rentang")
+plt.axhline(20, color="gray", linestyle="--")
+plt.axhline(30, color="gray", linestyle="--")
+plt.xlabel("indeks sampel")
+plt.ylabel("Temperatur (°C)")
+plt.legend()
+plt.show()
