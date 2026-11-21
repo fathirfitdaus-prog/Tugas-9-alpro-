@@ -1,0 +1,26 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+t = np.linspace(0, 2, 2000, endpoint=False)    
+y = 3.0 * np.sin(2 * np.pi * 5 * t + 0.3)      
+
+y0 = y - y.mean()                             
+
+A = (y0.max() - y0.min()) / 2
+rms = np.sqrt(np.mean(y0**2))
+print(f"Amplitudo A = {A:.4f}")
+print(f"RMS         = {rms:.4f}")
+print(f"A / sqrt(2) = {A / np.sqrt(2):.4f}")
+
+nol = np.sum(y0[:-1] * y0[1:] < 0)
+durasi = t[-1] - t[0]
+f = nol / (2 * durasi)
+print(f"Perpotongan nol = {nol}")
+print(f"Frekuensi       = {f:.3f} Hz")
+
+plt.plot(t, y)
+plt.xlabel("t (s)")
+plt.ylabel("y")
+plt.title(f"Gelombang, f = {f:.2f} Hz")
+plt.savefig("gelombang.png", dpi=300)
+plt.show()
