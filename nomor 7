@@ -1,0 +1,23 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+posisi_awal = 1.0      
+kecepatan_awal = 2.0   
+percepatan = 0.8       
+
+waktu = np.linspace(0, 5, 50)
+
+x_model = posisi_awal + kecepatan_awal * waktu + 0.5 * percepatan * waktu**2
+
+acak = np.random.default_rng(7)
+x_data = x_model + acak.normal(0, 0.3, len(waktu))
+
+galat_rms = np.sqrt(np.mean((x_data - x_model) ** 2))
+print(f"Galat RMS = {galat_rms:.4f} m")
+
+plt.plot(waktu, x_data, "o", label="data berderau")
+plt.plot(waktu, x_model, "-", label="model")
+plt.xlabel("t (s)")
+plt.ylabel("x (m)")
+plt.legend()
+plt.show()
