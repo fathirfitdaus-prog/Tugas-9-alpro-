@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+t = np.array([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])                      
+V = np.array([12.0, 8.60, 6.16, 4.41, 3.16, 2.26, 1.62, 1.16, 0.83, 0.59, 0.43])         
+
+turun = (V[0] - V[-1]) / V[0] * 100
+print(f"Penurunan tegangan = {turun:.2f} %")
+
+kemiringan, intersep = np.polyfit(t, np.log(V), 1)
+tau = -1 / kemiringan
+V0 = np.exp(intersep)
+print(f"V0  = {V0:.3f} V")
+print(f"tau = {tau:.3f} s")
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+
+ax1.plot(t, V, "o", label="data")
+ax1.plot(t, V0 * np.exp(-t / tau), "-", label=f"model, tau = {tau:.2f} s")
+ax1.set_xlabel("t (s)")
+ax1.set_ylabel("V (V)")
+ax1.set_title("Skala biasa")
+ax1.legend()
+
+ax2.plot(t, V, "o", label="data")
+ax2.plot(t, V0 * np.exp(-t / tau), "-", label="model")
+ax2.set_yscale("log")
+ax2.set_xlabel("t (s)")
+ax2.set_ylabel("V (V)")
+ax2.set_title("Skala logaritmik")
+ax2.legend()
+
+plt.tight_layout()
+plt.show()
