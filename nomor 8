@@ -1,0 +1,28 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+waktu = np.linspace(0, 10, 101)                              
+tegangan = 220 + 5 * np.sin(2 * np.pi * 0.3 * waktu)          
+arus = 2.0 + 0.5 * np.sin(2 * np.pi * 0.3 * waktu + 0.5)      
+
+daya = tegangan * arus
+
+daya_maks = np.max(daya)
+daya_rata = np.mean(daya)
+
+trapesium = getattr(np, "trapezoid", None) or np.trapz
+energi = trapesium(daya, waktu)
+
+print(f"Daya maksimum      = {daya_maks:.2f} W")
+print(f"Daya rata-rata     = {daya_rata:.2f} W")
+print(f"Energi (trapesium) = {energi:.2f} J")
+
+plt.plot(waktu, daya)
+plt.xlabel("t (s)")
+plt.ylabel("P (W)")
+plt.title("Daya terhadap waktu")
+plt.show()
+
+np.savetxt("hasil_daya.csv", np.column_stack((waktu, tegangan, arus, daya)),
+           delimiter=",", header="t_s,V_volt,I_ampere,P_watt", comments="")
+print("Hasil disimpan ke hasil_daya.csv")
