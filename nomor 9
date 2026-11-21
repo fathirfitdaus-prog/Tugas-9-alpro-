@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+intensitas_maks = 100.0   
+pusat = 2.0               
+lebar = 0.5               
+
+posisi = np.linspace(-2, 6, 4001)
+intensitas = intensitas_maks * np.exp(-(posisi - pusat) ** 2 / (2 * lebar ** 2))
+
+idx_puncak = np.argmax(intensitas)
+posisi_puncak = posisi[idx_puncak]
+relatif = intensitas / intensitas.max()
+print(f"Posisi puncak = {posisi_puncak:.4f}")
+print(f"Intensitas relatif di puncak = {relatif[idx_puncak]:.2f}")
+
+kiri = np.interp(0.5, relatif[:idx_puncak + 1], posisi[:idx_puncak + 1])
+kanan = np.interp(0.5, relatif[idx_puncak:][::-1], posisi[idx_puncak:][::-1])
+fwhm_numerik = kanan - kiri
+
+fwhm_teori = 2 * np.sqrt(2 * np.log(2)) * lebar
+
+print(f"FWHM numerik = {fwhm_numerik:.4f}")
+print(f"FWHM teori   = {fwhm_teori:.4f}")
+print(f"Selisih      = {abs(fwhm_numerik - fwhm_teori):.2e}")
+
+plt.plot(posisi, relatif)
+plt.hlines(0.5, kiri, kanan, color="red", label=f"FWHM = {fwhm_numerik:.3f}")
+plt.xlabel("x")
+plt.ylabel("I relatif")
+plt.legend()
+plt.show()
