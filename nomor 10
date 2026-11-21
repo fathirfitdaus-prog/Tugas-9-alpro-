@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+g_ref = 9.81                                                     
+panjang = np.array([0.20, 0.30, 0.40, 0.50, 0.60, 0.80, 1.00])   
+acak = np.random.default_rng(10)
+periode = 2 * np.pi * np.sqrt(panjang / g_ref) * (1 + acak.normal(0, 0.01, panjang.size))  
+
+periode_kuadrat = periode ** 2
+
+kemiringan, intersep = np.polyfit(panjang, periode_kuadrat, 1)
+g_hitung = 4 * np.pi ** 2 / kemiringan
+
+galat_persen = abs(g_hitung - g_ref) / g_ref * 100
+
+sisa = periode_kuadrat - (kemiringan * panjang + intersep)
+r_kuadrat = 1 - np.sum(sisa ** 2) / np.sum((periode_kuadrat - periode_kuadrat.mean()) ** 2)
+
+print(f"Kemiringan = {kemiringan:.4f} s^2/m")
+print(f"g hasil    = {g_hitung:.3f} m/s^2")
+print(f"Galat      = {galat_persen:.2f} %")
+print(f"R^2        = {r_kuadrat:.4f}")
+
+assert np.all(panjang > 0) and np.all(periode > 0), "L dan T harus positif"
+assert 9.0 < g_hitung < 10.5, "g di luar rentang wajar"
+print("Pemeriksaan OK: L dan T positif, satuan m/s^2, g mendekati 9,81 m/s^2")
+
+plt.plot(panjang, periode_kuadrat, "o", label="data")
+plt.plot(panjang, kemiringan * panjang + intersep, "-", label=f"fit, g = {g_hitung:.2f} m/s²")
+plt.xlabel("Panjang tali L (m)")
+plt.ylabel("Kuadrat periode T² (s²)")
+plt.title("Bandul sederhana: T² terhadap L")
+plt.legend()
+plt.savefig("bandul.png", dpi=300)
+plt.show()
+
+np.savetxt("hasil_bandul.csv",
+           np.column_stack((panjang, periode, periode_kuadrat, kemiringan * panjang + intersep)),
+           delimiter=",", header="L_m,T_s,T2_s2,T2_fit_s2", comments="")
+print("Hasil disimpan ke hasil_bandul.csv")
