@@ -1,0 +1,19 @@
+import numpy as np
+
+t = np.array([0.0, 1.0, 2.0, 3.0, 4.0, 5.0])   
+x = np.array([0.0, 1.2, 4.1, 9.0, 16.2, 25.1])  
+
+def analisis(t, x, label):
+    v = np.diff(x) / np.diff(t)
+    v_rata = np.mean(v)
+    v_global = (x[-1] - x[0]) / (t[-1] - t[0])
+    print(f"[{label}]")
+    print(f"  v minimum        = {v.min():.3f}")
+    print(f"  v maksimum       = {v.max():.3f}")
+    print(f"  rata-rata v      = {v_rata:.3f}")
+    print(f"  kecepatan global = {v_global:.3f}")
+
+analisis(t, x, "Data utuh")
+
+i = len(t) // 2
+analisis(np.delete(t, i), np.delete(x, i), "Satu baris tengah dihapus")
